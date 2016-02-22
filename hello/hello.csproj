@@ -121,9 +121,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="atom.ico" />
-    <None Include="Resources\multiplier.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="bottle.jpg" />
     <None Include="Resources\bottle_small.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -59,15 +59,5 @@ namespace hello.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] multiplier {
-            get {
-                object obj = ResourceManager.GetObject("multiplier", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
