@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+*.pdb
+/bin/product.txt
+.vs/
+obj/
+*.opendb
+*.sdf
