@@ -36,14 +36,11 @@ namespace hello
             notifyIcon1.BalloonTipTitle = "NOTIFICATION TEST:";
             notifyIcon1.BalloonTipText = "Notifications are usefull!!!";
             notifyIcon1.ShowBalloonTip(1000);
-
-//            linkLabel1.Text = "Click here to get more info.";
-//            linkLabel1.Links.Add(6, 4, "www.microsoft.com");
         }
 
         private void init_bmp()
         {
-            bitmap1 = (Bitmap)Bitmap.FromFile(@"C:\\Users\\Alessandro\\Codice\\test\\bottle_small.png");
+            bitmap1 = (Bitmap)Bitmap.FromFile(@"C:\\Users\\Alessandro\\Codice\\wpf-gui-test\\bottle_small.png");
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBox1.Image = bitmap1;
         }
