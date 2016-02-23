@@ -9,3 +9,4 @@ Testing the **C#** based .NET Windows Presentation Foundation (WPF) libraries wi
 * Pictures
 * Links
 * Shell commands
+* Timers
