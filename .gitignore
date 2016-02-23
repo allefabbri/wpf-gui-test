@@ -32,3 +32,5 @@
 obj/
 *.opendb
 *.sdf
+*.iobj
+*.ipdb

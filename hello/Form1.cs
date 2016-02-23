@@ -20,29 +20,41 @@ namespace hello
         string animal = "none";
         int multiplier_arg = 0;
         bool is_rotated = false;
-        Bitmap bitmap1;
         string repo_url = "https://github.com/MrRomanMaccaruni/wpf-gui-test";
+        int number_of_factors = 10;
+        int long_timer_s = 5;
+        int refresh_counter = 0;
 
         public Form1()
         {
             InitializeComponent();
-            init_bmp();
             Load += new EventHandler(Form1_Load);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // notification stuff
             notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
             notifyIcon1.BalloonTipTitle = "NOTIFICATION TEST:";
             notifyIcon1.BalloonTipText = "Notifications are usefull!!!";
             notifyIcon1.ShowBalloonTip(1000);
-        }
 
-        private void init_bmp()
-        {
-            bitmap1 = (Bitmap)Bitmap.FromFile(@"C:\\Users\\Alessandro\\Codice\\wpf-gui-test\\bottle_small.png");
-            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBox1.Image = bitmap1;
+            // selezione a tendina
+            for (int i = 1; i <= number_of_factors; i++)
+            {
+                this.comboBox1.Items.Add(i.ToString());
+            }
+
+            // timer stuff
+            this.timer1.Interval = long_timer_s * 1000;
+            this.label4.Text = System.String.Format("{0:0.00} sec", long_timer_s);
+
+            // file dialog 
+            openFileDialog1.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+            saveFileDialog1.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+
+            // tooltip
+            toolTip1.SetToolTip(button7, "A valid file should be formatted as:\nname = ...\nage = ...\nbirthplace = ...");
         }
 
         // message pop up button
@@ -97,27 +109,33 @@ namespace hello
 
         private void button5_Click(object sender, EventArgs e)
         {
-            // Writes an array of lines to a specific file
-            string[] lines = { "# SUMMARY FILE", "# Here you have all the parameters set by user." };
-            System.IO.File.WriteAllLines(@outfile, lines);
-
-            // Append other text to an existing file
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@outfile, true))
+            saveFileDialog1.ShowDialog();
+            outfile = saveFileDialog1.FileName;
+            if (outfile != "")
             {
-                file.WriteLine("integer value : " + number.ToString());
-                file.WriteLine("textbox value : " + textBox1.Text);
-                file.WriteLine("slider  value : " + trackBar1.Value.ToString());
-                file.WriteLine("animal  value : " + animal);
-            }
+                // Writes an array of lines to a specific file
+                string[] lines = { "# SUMMARY FILE", "# Here you have all the parameters set by user." };
+                System.IO.File.WriteAllLines(@outfile, lines);
 
-            if (add_date)
-            {
-                DateTime localDate = DateTime.Now;
+                // Append other text to an existing file
+                if (add_date)
+                {
+                    DateTime localDate = DateTime.Now;
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@outfile, true))
+                    {
+                        file.WriteLine("# date " + localDate.ToString());
+                    }
+                }
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(@outfile, true))
                 {
-                    file.WriteLine("date          : " + localDate.ToString());
+                    file.WriteLine("number  value : " + number.ToString());
+                    file.WriteLine("step    value : " + step.ToString());
+                    file.WriteLine("textbox value : " + textBox1.Text);
+                    file.WriteLine("slider  value : " + trackBar1.Value.ToString());
+                    file.WriteLine("animal  value : " + animal);
                 }
             }
+            MessageBox.Show("file {0} successfully created!", outfile.ToString().Split('\\').Last());
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -235,20 +253,70 @@ namespace hello
 
         private void button11_Click(object sender, EventArgs e)
         {
-            if( is_rotated )
+            if (is_rotated)
             {
-                bitmap1.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                pictureBox1.Image = bitmap1;
+                Bitmap bitmap = (Bitmap)pictureBox1.Image;
+                bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+
+                pictureBox1.Image = bitmap;
+
                 button11.Text = "knock down bottle";
                 is_rotated = false;
             }
             else
             {
-                bitmap1.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                pictureBox1.Image = bitmap1;
+                Bitmap bitmap = (Bitmap)pictureBox1.Image;
+                bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                pictureBox1.Image = bitmap;
+
                 button11.Text = "lift bottle";
                 is_rotated = true;
             }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            step = (double)numericUpDown1.Value;
+            label8.Text = "epsilon = " + step.ToString();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            button12.Text = "start timer";
+            timer_refresh.Enabled = false;
+            refresh_counter = 0;
+            MessageBox.Show(System.String.Format("{0: 0} seconds elapsed", long_timer_s));
+            label4.Text = System.String.Format("{0:0.00} sec", long_timer_s);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if (timer1.Enabled)
+            {
+                timer_refresh.Enabled = false;
+                timer1.Enabled = false;
+                button12.Text = "start timer";
+            }
+            else
+            {
+                timer_refresh.Enabled = true;
+                timer1.Enabled = true;
+                button12.Text = "stop timer";
+            }
+        }
+
+        private void timer_refresh_Tick(object sender, EventArgs e)
+        {
+            refresh_counter++;
+            double remaining_time_s = (long_timer_s * 1000 - timer_refresh.Interval * refresh_counter) / 1000.0;
+            label4.Text = System.String.Format("{0:0.0} sec", remaining_time_s);
+            timer_refresh.Enabled = true;
         }
 
     }
